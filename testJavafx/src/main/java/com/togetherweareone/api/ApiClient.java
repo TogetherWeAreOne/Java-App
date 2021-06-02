@@ -10,31 +10,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ApiClient {
 
     private static ApiClient instance;
-    public WebClient webClient;
+    private final WebClient webClient;
 
     public ApiClient() {
-        this.webClient = WebClient.create("http://localhost:3000/organisation-app");
+
+        this.webClient = WebClient.builder()
+                .baseUrl("http://localhost:3000/organisation-app")
+                .clientConnector(new JettyClientHttpConnector())
+                .build();
     }
 
-    public ApiClient getInstance() {
-        if (instance == null) {
-            instance = new ApiClient();
-        }
-        return instance;
+    public WebClient getWebClient() {
+        return webClient;
     }
-
-    public JettyResourceFactory resourceFactory() {
-        return new JettyResourceFactory();
-    }
-
-    public WebClient webClient() {
-
-        HttpClient httpClient = new HttpClient();
-
-        ClientHttpConnector connector =
-                new JettyClientHttpConnector(httpClient);
-
-        return WebClient.builder().clientConnector(connector).build();
-    }
-
 }

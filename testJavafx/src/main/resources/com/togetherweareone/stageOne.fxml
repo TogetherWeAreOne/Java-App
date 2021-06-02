@@ -4,9 +4,12 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane prefHeight="500.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.togetherweareone.StageOne">
-    <children>
-        <CheckBox layoutX="155.0" layoutY="159.0" mnemonicParsing="false" text="CheckBox"/>
-    </children>
+<AnchorPane prefHeight="500.0" prefWidth="894.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.togetherweareone.StageOne">
+   <children>
+      <TitledPane animated="false" layoutX="-50.0" layoutY="204.0" text="untitled">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+        </content>
+      </TitledPane>
+   </children>
 </AnchorPane>

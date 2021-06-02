@@ -1,7 +1,10 @@
 package com.togetherweareone.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import java.util.ArrayList;
 
+@JsonAutoDetect
 public class User {
 
     public String id;

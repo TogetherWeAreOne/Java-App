@@ -2,25 +2,36 @@ package com.togetherweareone.services;
 
 
 import com.togetherweareone.models.User;
+import com.togetherweareone.request.authRequest.LoginRequest;
+import com.togetherweareone.request.authRequest.SignInRequest;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 
 public class AuthService {
 
 
-    public User login(WebClient webClient, String email, String password) {
+    public Mono<User> login(WebClient webClient, LoginRequest request) {
 
-
-        return webClient.post()
-                .uri("/auth/login").contentType(MediaType.TEXT_PLAIN)
-                .body(BodyInserters.fromFormData("email", "test@gmail.com")
-                        .with("password", "test"))
+        return  webClient.post()
+                .uri("/auth/login")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(request),LoginRequest.class)
                 .retrieve()
-                .bodyToMono(User.class)
-                .block();
+                .bodyToMono(User.class);
+    }
 
+    public Mono<User> signIn(WebClient webClient, SignInRequest request) {
+
+        return  webClient.post()
+                .uri("/auth/signin")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(request),SignInRequest.class)
+                .retrieve()
+                .bodyToMono(User.class);
     }
 
 

@@ -4,7 +4,7 @@
 
 
 <GridPane alignment="center" hgap="10" prefWidth="440.0" vgap="10" xmlns:fx="http://javafx.com/fxml/1"
-          xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="com.togetherweareone.Controller">
+          xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="com.togetherweareone.controller.Controller">
     <children>
         <AnchorPane prefHeight="319.0" prefWidth="440.0"/>
     </children>
