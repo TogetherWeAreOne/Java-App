@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@start.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.togetherweareone.controller.StartController">
+   <children>
+      <AnchorPane id="connect" layoutX="121.0" layoutY="80.0" prefHeight="241.0" prefWidth="358.0" styleClass="page" />
+   </children>
+</AnchorPane>
