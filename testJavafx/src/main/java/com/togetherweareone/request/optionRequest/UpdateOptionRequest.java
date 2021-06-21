@@ -1,5 +1,7 @@
 package com.togetherweareone.request.optionRequest;
 
-public class
-UpdateOptionRequest {
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect
+public class UpdateOptionRequest {
 }
