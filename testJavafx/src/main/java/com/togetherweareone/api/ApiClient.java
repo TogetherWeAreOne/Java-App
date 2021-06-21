@@ -14,9 +14,12 @@ public class ApiClient {
 
     public ApiClient() {
 
+        HttpClient httpClient = new HttpClient();
+        ClientHttpConnector connector = new JettyClientHttpConnector(httpClient);
+
         this.webClient = WebClient.builder()
                 .baseUrl("http://localhost:3000/organisation-app")
-                .clientConnector(new JettyClientHttpConnector())
+                .clientConnector(connector)
                 .build();
     }
 

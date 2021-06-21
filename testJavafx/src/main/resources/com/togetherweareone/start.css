@@ -1,0 +1,5 @@
+.page {
+    -fx-border-radius: 3;
+    -fx-border-color: #ffd500;
+    -fx-background-color : blue;
+}

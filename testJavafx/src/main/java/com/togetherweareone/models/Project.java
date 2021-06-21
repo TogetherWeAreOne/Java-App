@@ -1,7 +1,10 @@
 package com.togetherweareone.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import java.util.ArrayList;
 
+@JsonAutoDetect
 public class Project {
 
     public String id;
@@ -9,11 +12,8 @@ public class Project {
     public String description;
     public ArrayList<Column> columns;
 
-    public Project(String id, String title, String description, ArrayList<Column> columns) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.columns = columns;
+    public Project() {
+        this.columns = new ArrayList<>();
     }
 
     public String getId() {

@@ -34,5 +34,13 @@ public class AuthService {
                 .bodyToMono(User.class);
     }
 
+    public Mono<Void> logout(WebClient webClient) {
+
+        return  webClient.delete()
+                .uri("/auth/logout")
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
+
 
 }

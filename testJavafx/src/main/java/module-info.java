@@ -27,9 +27,11 @@ module com.togetherweareone {
     //requires org.controlsfx.controls;
 
 
-    opens com.togetherweareone.request;
+    opens com.togetherweareone.request.authRequest;
+    opens com.togetherweareone.request.projectRequest;
 
     exports com.togetherweareone to javafx.graphics, javafx.fxml;
     exports com.togetherweareone.controller;
     exports com.togetherweareone.models;
+
 }

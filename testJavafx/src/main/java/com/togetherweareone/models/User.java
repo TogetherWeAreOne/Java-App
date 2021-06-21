@@ -64,4 +64,19 @@ public class User {
     public ArrayList<Project> getProjects() {
         return projects;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                ", initial='" + initial + '\'' +
+                ", image='" + image + '\'' +
+                ", projects=" + projects +
+                '}';
+    }
 }
