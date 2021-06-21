@@ -30,7 +30,7 @@ public class Main extends Application {
         ApiClient client = new ApiClient();
         AuthService service = new AuthService();
         ProjectService projectService = new ProjectService();
-        LoginRequest request = new LoginRequest("testBBBBBaaaaaaB@gmail.com","test");
+        LoginRequest request = new LoginRequest("test2@gmail.com","test");
         CreateProjectRequest createProjectRequest = new CreateProjectRequest("TEST JAVA", "TEST JAVA DESCRIPTION");
         //MultiValueMap<String, String> cookies = new LinkedMultiValueMap<String, String>();
 
