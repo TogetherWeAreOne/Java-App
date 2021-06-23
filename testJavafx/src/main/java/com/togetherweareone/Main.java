@@ -46,5 +46,6 @@ public class Main extends Application {
         } else {
             launch(args);
         }
+        System.exit(0);
     }
 }
