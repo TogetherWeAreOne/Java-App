@@ -1,20 +1,15 @@
 package com.togetherweareone;
 
 import com.togetherweareone.api.ApiClient;
+import com.togetherweareone.cli.Cli;
 import com.togetherweareone.models.Project;
 import com.togetherweareone.models.User;
 import com.togetherweareone.request.authRequest.LoginRequest;
-import com.togetherweareone.request.authRequest.SignInRequest;
 import com.togetherweareone.request.projectRequest.CreateProjectRequest;
 import com.togetherweareone.services.AuthService;
 import com.togetherweareone.services.ProjectService;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
 
 public class Main extends Application {
@@ -43,5 +38,13 @@ public class Main extends Application {
         project.doOnSuccess(System.out::println)
                 .block();
 
+    }
+
+    public static void main(String[] args){
+        if (args.length > 0 && args[0].equals("-cli")){
+            new Cli();
+        } else {
+            launch(args);
+        }
     }
 }
