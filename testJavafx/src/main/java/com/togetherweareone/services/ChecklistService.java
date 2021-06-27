@@ -34,7 +34,7 @@ public class ChecklistService {
 
     public Mono<Option[]> getAllOptions(WebClient webClient, GetAllOptionsRequest request) {
         return webClient.get()
-                .uri("/project/column/taask/checklist/" + request.getChecklistId() + "/get/allOptions")
+                .uri("/project/column/task/checklist/" + request.getChecklistId() + "/get/allOptions")
                 .retrieve()
                 .bodyToMono(Option[].class);
 
