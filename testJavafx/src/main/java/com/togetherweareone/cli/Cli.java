@@ -3,6 +3,7 @@ package com.togetherweareone.cli;
 import com.togetherweareone.api.ApiClient;
 import com.togetherweareone.models.*;
 import com.togetherweareone.request.authRequest.LoginRequest;
+import com.togetherweareone.request.authRequest.SignInRequest;
 import com.togetherweareone.request.checklistRequest.CreateChecklistRequest;
 import com.togetherweareone.request.checklistRequest.GetAllOptionsRequest;
 import com.togetherweareone.request.columnRequest.CreateColumnRequest;
@@ -17,6 +18,8 @@ import com.togetherweareone.utilities.ConsoleColors;
 import reactor.core.publisher.Mono;
 
 import java.util.Scanner;
+
+//TODO: Implement Updates and Deletions
 
 public class Cli {
 
@@ -38,10 +41,13 @@ public class Cli {
         this.authService = new AuthService();
         this.apiClient = new ApiClient();
         this.user = null;
-        do {
-            printLogin();
-        }
-        while (loginError);
+        this.projects = null;
+        this.columns = null;
+        this.tasks = null;
+        this.checklists = null;
+        this.options = null;
+
+        printAccount();
 
         printChooseProject();
 
@@ -51,6 +57,54 @@ public class Cli {
     /*
     Fonctions d'écriture de la console communes
      */
+    void printAccount(){
+        clearConsole();
+
+        Displays.printInformation("Que voulez-vous faire ?");
+        Displays.printInformation("0 : S'inscrire\n" +
+                "1 : Se connecter"
+        );
+
+        int choice = askMultipleChoices(2);
+        if (choice == 0){
+            printSignUp();
+        } else {
+            do {
+                printLogin();
+            }
+            while (loginError);
+        }
+    }
+
+    void printSignUp() {
+        clearConsole();
+
+        Displays.printTitle("Inscription");
+
+        String email = ask("Veuillez entrer votre email :");
+        String password = ask("Veuillez entrer votre mot de passe :");
+        String firstname = ask("Veuillez entrer votre prénom :");
+        String lastname = ask("Veuillez entrer votre nom de famille :");
+        String pseudo = ask("Veuillez entrer votre pseudo :");
+
+        SignInRequest signInRequest = new SignInRequest(email, password, firstname, lastname, pseudo);
+        Mono<User> signInUser = authService.signIn(apiClient.getWebClient(), signInRequest);
+
+        signInUser
+                .doOnSuccess(this::handleUserLogin)
+                .doOnError(this::handleUserLoginError)
+                .onErrorReturn(new User())
+                .block();
+
+        LoginRequest loginRequest = new LoginRequest(email, password);
+        Mono<User> loginUser = authService.login(apiClient.getWebClient(), loginRequest);
+
+        loginUser
+                .doOnSuccess(this::handleUserLogin)
+                .doOnError(this::handleUserLoginError)
+                .onErrorReturn(new User())
+                .block();
+    }
 
     void end() {
         Mono<Void> logoutRequest = authService.logout(apiClient.getWebClient());
@@ -59,7 +113,7 @@ public class Cli {
         if (!askQuit()) {
             this.user = null;
             clearConsole();
-            printLogin();
+            printAccount();
         }
     }
 
@@ -79,9 +133,15 @@ public class Cli {
             if (chosenColumn != null) {
                 Displays.printHighlight("Colonne sélectionnée : ", this.chosenColumn.title);
             }
+
             if (chosenTask != null) {
                 Displays.printHighlight("Tâche sélectionnée : ", this.chosenTask.title);
             }
+
+            if (chosenChecklist != null) {
+                Displays.printHighlight("Checklist sélectionnée : ", this.chosenChecklist.title);
+            }
+
             Displays.printLine();
         }
     }
@@ -107,6 +167,8 @@ public class Cli {
 
     void printLogin() {
         clearConsole();
+
+        Displays.printTitle("Connexion");
 
         String email = ask("Veuillez entrer votre email :");
         String password = ask("Veuillez entrer votre mot de passe :");
@@ -177,7 +239,9 @@ public class Cli {
                 chosenProject = this.projects[choice];
                 printChooseColumns();
             }
-        } else {
+        }
+
+        if (this.projects == null || this.projects.length == 0){
             Displays.printInformation("Aucun projet n'est disponible !");
             waitInput();
         }
@@ -269,7 +333,9 @@ public class Cli {
                 chosenTask = this.tasks[choice];
                 printChooseChecklist();
             }
-        } else {
+        }
+
+        if (this.tasks == null || this.tasks.length == 0){
             Displays.printInformation("Aucune tâche n'est disponible !");
             waitInput();
         }
@@ -333,7 +399,9 @@ public class Cli {
                 chosenChecklist = this.checklists[choice];
                 printChooseOption();
             }
-        } else {
+        }
+
+        if (this.checklists == null || this.checklists.length == 0){
             Displays.printInformation("Aucune checklist n'est disponible !");
             waitInput();
         }
@@ -389,7 +457,7 @@ public class Cli {
             }
 
             Displays.printInformation(askOptions.toString());
-        } else Displays.printInformation("Aucune checklist n'est disponible !");
+        } else Displays.printInformation("Aucune option n'est disponible !");
 
         waitInput();
     }
@@ -431,7 +499,9 @@ public class Cli {
                 chosenColumn = this.columns[choice];
                 printChooseTask();
             }
-        } else {
+        }
+
+        if (this.columns == null || this.columns.length == 0){
             Displays.printInformation("Aucune colonne n'est disponible !");
             waitInput();
         }
@@ -478,7 +548,7 @@ public class Cli {
                 choiceValue = Integer.parseInt(choice);
             } while (choiceValue > nbOfChoices - 1 || choiceValue < 0);
         } else if (nbOfChoices == 1) return 0;
-        else return 0;
+        else return null;
 
         return choiceValue;
     }
