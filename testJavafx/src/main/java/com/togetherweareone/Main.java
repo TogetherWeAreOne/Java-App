@@ -14,29 +14,43 @@ import reactor.core.publisher.Mono;
 
 public class Main extends Application {
 
+    boolean error = false;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+
         /*Parent root = FXMLLoader.load(getClass().getResource("start.fxml"));
         primaryStage.setTitle("TogetherWeAreOne Organisation");
         primaryStage.setScene(new Scene(root, 1200, 800));
 
         primaryStage.show();
 */
-        ApiClient client = new ApiClient();
+        /*ApiClient client = new ApiClient();
         AuthService service = new AuthService();
         ProjectService projectService = new ProjectService();
-        LoginRequest request = new LoginRequest("test2@gmail.com","test");
-        CreateProjectRequest createProjectRequest = new CreateProjectRequest("TEST JAVA", "TEST JAVA DESCRIPTION");
+        LoginRequest request = new LoginRequest("test@gmail.com","password");
+        CreateProjectRequest createProjectRequest = new CreateProjectRequest("testProjectInline", "testProjectInline");
         //MultiValueMap<String, String> cookies = new LinkedMultiValueMap<String, String>();
 
         Mono<User> user = service.login(client.getWebClient(), request);
 
         user.doOnSuccess(System.out::println)
+                .doOnError(e ->  {
+                    error = true;
+                })
+                .onErrorReturn(new User())
                 .block();
 
-        Mono<Project> project = projectService.createProject(client.getWebClient(), createProjectRequest);
-        project.doOnSuccess(System.out::println)
-                .block();
+        if (error)
+            System.out.println("NO CREATION USER");
+        else {
+            Mono<Project> project = projectService.createProject(client.getWebClient(), createProjectRequest);
+            project.doOnSuccess(System.out::println)
+                    .onErrorReturn(new Project())
+                    .block();
+        }*/
+
 
     }
 
