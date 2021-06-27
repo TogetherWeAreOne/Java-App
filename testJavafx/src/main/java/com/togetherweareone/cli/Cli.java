@@ -65,40 +65,40 @@ public class Cli {
         printHugeTitle();
         printPresentation();
         if (loginError) {
-            printAlert("Votre identifiant ou mot de passe est incorrect !");
-            printLine();
+            Displays.printAlert("Votre identifiant ou mot de passe est incorrect !");
+            Displays.printLine();
         } else if (user != null){
-            printHighlight("Votre identifiant : ", this.user.id);
-            printLine();
+            Displays.printHighlight("Votre identifiant : ", this.user.id);
+            Displays.printLine();
         }
 
         if (chosenProject != null){
-            printHighlight("Projet sélectionné : ", this.chosenProject.title);
+            Displays.printHighlight("Projet sélectionné : ", this.chosenProject.title);
             if (chosenColumn != null){
-                printHighlight("Colonne sélectionnée : ", this.chosenColumn.title);
+                Displays.printHighlight("Colonne sélectionnée : ", this.chosenColumn.title);
             }
             if (chosenTask != null){
-                printHighlight("Tâche sélectionnée : ", this.chosenTask.title);
+                Displays.printHighlight("Tâche sélectionnée : ", this.chosenTask.title);
             }
-            printLine();
+            Displays.printLine();
         }
     }
 
     void printHugeTitle() {
-        printParagraph();
-        printError("-------------------------------------------------------------------------------------------------");
-        printError(" _____                 _   _                                                                  \n" +
+        Displays.printParagraph();
+        Displays.printError("-------------------------------------------------------------------------------------------------");
+        Displays.printError(" _____                 _   _                                                                  \n" +
                 "/__   \\___   __ _  ___| |_| |__   ___ _ __  __      _____    __ _ _ __ ___    ___  _ __   ___ \n" +
                 "  / /\\/ _ \\ / _` |/ _ \\ __| '_ \\ / _ \\ '__| \\ \\ /\\ / / _ \\  / _` | '__/ _ \\  / _ \\| '_ \\ / _ \\\n" +
                 " / / | (_) | (_| |  __/ |_| | | |  __/ |     \\ V  V /  __/ | (_| | | |  __/ | (_) | | | |  __/\n" +
                 " \\/   \\___/ \\__, |\\___|\\__|_| |_|\\___|_|      \\_/\\_/ \\___|  \\__,_|_|  \\___|  \\___/|_| |_|\\___|\n" +
                 "            |___/                                                                             ");
-        printError("-------------------------------------------------------------------------------------------------");
-        printParagraph();
+        Displays.printError("-------------------------------------------------------------------------------------------------");
+        Displays.printParagraph();
     }
 
     void printPresentation() {
-        printInformation("Bienvenue sur Together We Are One ! ( CLI version ) © 2021 TWAO.  All rights reserved.\n" +
+        Displays.printInformation("Bienvenue sur Together We Are One ! ( CLI version ) © 2021 TWAO.  All rights reserved.\n" +
                 "Vous pouvez utilisez les différentes commandes pour naviguer dans l'arborescence !\n" +
                 "N'oubliez que vous pouvez toujours exécuter ce programme en version graphique ou bien aller voir l'interface web sur notre site : *insérer le lien*");
     }
@@ -124,8 +124,8 @@ public class Cli {
         do {
             chosenProject = null;
             clearConsole();
-            printInformation("Que voulez-vous faire ?");
-            printInformation("1 : Créer un nouveau projet\n" +
+            Displays.printInformation("Que voulez-vous faire ?");
+            Displays.printInformation("1 : Créer un nouveau projet\n" +
                     "2 : Accéder à un projet existant\n" +
                     "0 : Se déconnecter"
             );
@@ -142,7 +142,7 @@ public class Cli {
 
     void createProject(){
         clearConsole();
-        printTitle("Création d'un nouveau projet");
+        Displays.printTitle("Création d'un nouveau projet");
         ProjectService projectService = new ProjectService();
         String title = ask("Titre :");
         String description = ask("Description :");
@@ -154,7 +154,7 @@ public class Cli {
 
     void useProject(){
         clearConsole();
-        printTitle("Choix d'un projet");
+        Displays.printTitle("Choix d'un projet");
         ProjectService projectService = new ProjectService();
         Mono<Project[]> allProjects = projectService.getAllProjects(apiClient.getWebClient());
         allProjects.doOnSuccess(p ->{
@@ -170,14 +170,14 @@ public class Cli {
                 askProjects.append(i).append(": ").append(p.id).append(" / ").append(p.title).append("\n");
             }
 
-            printInformation(askProjects.toString());
+            Displays.printInformation(askProjects.toString());
 
             Integer choice = askMultipleChoices(this.projects.length);
             if (choice != null) {
                 chosenProject = this.projects[choice];
                 printChooseColumns();
             }
-        } else printInformation("Aucun projet n'est disponible !");
+        } else Displays.printInformation("Aucun projet n'est disponible !");
     }
 
     void printChooseColumns() {
@@ -185,8 +185,8 @@ public class Cli {
         do {
             chosenColumn = null;
             clearConsole();
-            printInformation("Que voulez-vous faire ?");
-            printInformation("1 : Créer une nouvelle colonne\n" +
+            Displays.printInformation("Que voulez-vous faire ?");
+            Displays.printInformation("1 : Créer une nouvelle colonne\n" +
                     "2 : Accéder à une colonne existante\n" +
                     "0 : Retourner au choix de projet"
             );
@@ -206,8 +206,8 @@ public class Cli {
         do {
             chosenTask = null;
             clearConsole();
-            printInformation("Que voulez-vous faire ?");
-            printInformation("1 : Créer une nouvelle tâche\n" +
+            Displays.printInformation("Que voulez-vous faire ?");
+            Displays.printInformation("1 : Créer une nouvelle tâche\n" +
                     "2 : Accéder à une tâche existante\n" +
                     "0 : Retourner au choix de colonne"
             );
@@ -224,11 +224,11 @@ public class Cli {
 
     private void createTask() {
         clearConsole();
-        printTitle("Création d'une nouvelle tâche");
+        Displays.printTitle("Création d'une nouvelle tâche");
         TaskService taskService = new TaskService();
         String title = ask("Titre :");
         String description = ask("Description :");
-        printInformation("Niveau de priorité :\n" +
+        Displays.printInformation("Niveau de priorité :\n" +
                 "0 : Bas\n" +
                 "1 : Moyen\n" +
                 "2 : Haut"
@@ -242,7 +242,7 @@ public class Cli {
 
     private void useTask() {
         clearConsole();
-        printTitle("Choix d'une tâche");
+        Displays.printTitle("Choix d'une tâche");
         ColumnService columnService = new ColumnService();
         GetAllTasksRequest getAllTasksRequest = new GetAllTasksRequest(this.chosenColumn.id);
         Mono<Task[]> allTasks = columnService.getAllTasks(apiClient.getWebClient(), getAllTasksRequest);
@@ -260,7 +260,7 @@ public class Cli {
                 askTasks.append(i).append(": ").append(t.id).append(" / ").append(t.title).append("\n");
             }
 
-            printInformation(askTasks.toString());
+            Displays.printInformation(askTasks.toString());
 
             Integer choice = askMultipleChoices(this.tasks.length);
 
@@ -268,7 +268,7 @@ public class Cli {
                 chosenTask = this.tasks[choice];
                 printChooseChecklist();
             }
-        } else printInformation("Aucune tâche n'est disponible !");
+        } else Displays.printInformation("Aucune tâche n'est disponible !");
     }
 
     void printChooseChecklist() {
@@ -276,8 +276,8 @@ public class Cli {
         do {
             chosenChecklist = null;
             clearConsole();
-            printInformation("Que voulez-vous faire ?");
-            printInformation("1 : Créer une nouvelle checklist\n" +
+            Displays.printInformation("Que voulez-vous faire ?");
+            Displays.printInformation("1 : Créer une nouvelle checklist\n" +
                     "2 : Accéder à une checklist existante\n" +
                     "0 : Retourner au choix de tâche"
             );
@@ -294,7 +294,7 @@ public class Cli {
 
     void createChecklist() {
         clearConsole();
-        printTitle("Création d'une nouvelle checklist");
+        Displays.printTitle("Création d'une nouvelle checklist");
         ChecklistService checklistService = new ChecklistService();
         String title = ask("Titre :");
         CreateChecklistRequest createChecklistRequest = new CreateChecklistRequest(title, this.chosenTask.id);
@@ -305,7 +305,7 @@ public class Cli {
 
     void useChecklist() {
         clearConsole();
-        printTitle("Choix d'une checklist");
+        Displays.printTitle("Choix d'une checklist");
         TaskService taskService = new TaskService();
         GetAllChecklistsRequest getAllChecklistsRequest = new GetAllChecklistsRequest(this.chosenTask.id);
         Mono<Checklist[]> allChecklists = taskService.getAllChecklists(apiClient.getWebClient(), getAllChecklistsRequest);
@@ -323,7 +323,7 @@ public class Cli {
                 askChecklists.append(i).append(": ").append(c.id).append(" / ").append(c.title).append("\n");
             }
 
-            printInformation(askChecklists.toString());
+            Displays.printInformation(askChecklists.toString());
 
             Integer choice = askMultipleChoices(this.checklists.length);
 
@@ -331,12 +331,12 @@ public class Cli {
                 chosenChecklist = this.checklists[choice];
                 //printChooseOption();
             }
-        } else printInformation("Aucune checklist n'est disponible !");
+        } else Displays.printInformation("Aucune checklist n'est disponible !");
     }
 
     void createColumn() {
         clearConsole();
-        printTitle("Création d'une nouvelle colonne");
+        Displays.printTitle("Création d'une nouvelle colonne");
         ColumnService columnService = new ColumnService();
         String title = ask("Titre :");
         CreateColumnRequest createColumnRequest = new CreateColumnRequest(title, this.chosenProject.id);
@@ -347,7 +347,7 @@ public class Cli {
 
     void useColumn() {
         clearConsole();
-        printTitle("Choix d'une colonne");
+        Displays.printTitle("Choix d'une colonne");
         ProjectService projectService = new ProjectService();
         GetAllColumnsRequest getAllColumnsRequest = new GetAllColumnsRequest(this.chosenProject.id);
         Mono<Column[]> allColumns = projectService.getAllColumns(apiClient.getWebClient(), getAllColumnsRequest);
@@ -365,7 +365,7 @@ public class Cli {
                 askColumns.append(i).append(": ").append(c.id).append(" / ").append(c.title).append("\n");
             }
 
-            printInformation(askColumns.toString());
+            Displays.printInformation(askColumns.toString());
 
             Integer choice = askMultipleChoices(this.columns.length);
 
@@ -373,7 +373,7 @@ public class Cli {
                 chosenColumn = this.columns[choice];
                 printChooseTask();
             }
-        } else printInformation("Aucune colonne n'est disponible !");
+        } else Displays.printInformation("Aucune colonne n'est disponible !");
     }
 
     void handleUserLogin(User user) {
@@ -426,41 +426,7 @@ public class Cli {
     /*
     Fonctions usuelles d'écriture de la console
      */
-    void print(String text) {
-        System.out.println(ConsoleColors.WHITE + text + ConsoleColors.RESET);
-        printLine();
-    }
 
-    void printTitleUnderlined(String text) {
-        System.out.println(ConsoleColors.CYAN_BOLD_UNDERLINED + text + ConsoleColors.RESET);
-        printParagraph();
-    }
-
-    void printTitle(String text) {
-        System.out.println(ConsoleColors.CYAN_BRIGHT + text + ConsoleColors.RESET);
-        printParagraph();
-    }
-
-    void printAlert(String text) {
-        System.out.println(ConsoleColors.YELLOW_BRIGHT + text + ConsoleColors.RESET);
-        printLine();
-    }
-
-    void printInformation(String text) {
-        System.out.println(ConsoleColors.GREEN_ITALIC + text + ConsoleColors.RESET);
-        printParagraph();
-    }
-
-    void printError(String text) {
-        System.out.println(ConsoleColors.RED_BRIGHT + text + ConsoleColors.RESET);
-        printLine();
-    }
-
-    void printHighlight(String text, String highlight) {
-        System.out.print(ConsoleColors.GREEN_ITALIC + text + ConsoleColors.RESET + "  ");
-        System.out.println(ConsoleColors.YELLOW_BRIGHT + highlight + ConsoleColors.RESET);
-        printLine();
-    }
 
     String ask(String text) {
         return askDefault(text, false);
@@ -474,17 +440,8 @@ public class Cli {
         System.out.print((important ? ConsoleColors.YELLOW_ITALIC : ConsoleColors.GREEN_ITALIC) + text + ConsoleColors.RESET + "  ");
         Scanner sc = new Scanner(System.in);
         String entry = sc.nextLine();
-        printLine();
+        Displays.printLine();
         return entry;
-    }
-
-    void printParagraph() {
-        System.out.println();
-        System.out.println();
-    }
-
-    void printLine() {
-        System.out.println();
     }
 
     void clearConsole() {
