@@ -8,7 +8,7 @@ public class Column {
     public String title;
     public ArrayList<Task> tasks;
 
-    public Column(){
+    public Column() {
         tasks = new ArrayList<>();
     }
 

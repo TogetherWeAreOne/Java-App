@@ -10,7 +10,7 @@ public class Task {
     public String priority;
     public ArrayList<Checklist> checklists;
 
-    public Task(){
+    public Task() {
         this.checklists = new ArrayList<Checklist>();
     }
 

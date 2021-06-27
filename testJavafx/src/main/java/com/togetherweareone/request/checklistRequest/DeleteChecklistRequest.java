@@ -5,7 +5,7 @@ public class DeleteChecklistRequest {
     public String checklistId;
     public String projectId;
 
-    public DeleteChecklistRequest(String projectId, String checklistId){
+    public DeleteChecklistRequest(String projectId, String checklistId) {
         this.projectId = projectId;
         this.checklistId = checklistId;
     }

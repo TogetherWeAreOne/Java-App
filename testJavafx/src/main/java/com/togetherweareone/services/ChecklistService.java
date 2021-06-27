@@ -2,22 +2,18 @@ package com.togetherweareone.services;
 
 import com.togetherweareone.models.Checklist;
 import com.togetherweareone.models.Option;
-import com.togetherweareone.models.Project;
-import com.togetherweareone.models.User;
-import com.togetherweareone.request.authRequest.LoginRequest;
 import com.togetherweareone.request.checklistRequest.CreateChecklistRequest;
 import com.togetherweareone.request.checklistRequest.DeleteChecklistRequest;
 import com.togetherweareone.request.checklistRequest.GetAllOptionsRequest;
 import com.togetherweareone.request.checklistRequest.UpdateChecklistRequest;
-import com.togetherweareone.request.projectRequest.CreateProjectRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 public class ChecklistService {
 
-    public Mono<Checklist> createChecklist(WebClient webClient, CreateChecklistRequest request){
-        return  webClient.post()
+    public Mono<Checklist> createChecklist(WebClient webClient, CreateChecklistRequest request) {
+        return webClient.post()
                 .uri("project/column/task/" + request.getTaskId() + "/checklist/create")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -26,7 +22,7 @@ public class ChecklistService {
                 .bodyToMono(Checklist.class);
     }
 
-    public Mono<Void> updateChecklist(WebClient webClient, UpdateChecklistRequest request){
+    public Mono<Void> updateChecklist(WebClient webClient, UpdateChecklistRequest request) {
         return webClient.put()
                 .uri("project/checklist/" + request.getChecklistId() + "/update")
                 .accept(MediaType.APPLICATION_JSON)
@@ -36,7 +32,7 @@ public class ChecklistService {
                 .bodyToMono(Void.class);
     }
 
-    public Mono<Option[]> getAllOptions(WebClient webClient, GetAllOptionsRequest request){
+    public Mono<Option[]> getAllOptions(WebClient webClient, GetAllOptionsRequest request) {
         return webClient.get()
                 .uri("/project/column/taask/checklist/" + request.getChecklistId() + "/get/allOptions")
                 .retrieve()
@@ -44,7 +40,7 @@ public class ChecklistService {
 
     }
 
-    public Mono<Void> deleteChecklist(WebClient webClient, DeleteChecklistRequest request){
+    public Mono<Void> deleteChecklist(WebClient webClient, DeleteChecklistRequest request) {
         return webClient.delete()
                 .uri("/project/" + request.getProjectId() + "/column/task/checklist/" + request.getChecklistId() + "/delete")
                 .retrieve()

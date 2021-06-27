@@ -8,7 +8,7 @@ public class Checklist {
     public String title;
     public ArrayList<Option> options;
 
-    public Checklist(){
+    public Checklist() {
         this.options = new ArrayList<>();
     }
 

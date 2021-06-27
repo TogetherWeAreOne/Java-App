@@ -14,7 +14,6 @@ import com.togetherweareone.services.*;
 import com.togetherweareone.utilities.ConsoleColors;
 import reactor.core.publisher.Mono;
 
-import java.lang.constant.Constable;
 import java.util.Scanner;
 
 public class Cli {
@@ -67,17 +66,17 @@ public class Cli {
         if (loginError) {
             Displays.printAlert("Votre identifiant ou mot de passe est incorrect !");
             Displays.printLine();
-        } else if (user != null){
+        } else if (user != null) {
             Displays.printHighlight("Votre identifiant : ", this.user.id);
             Displays.printLine();
         }
 
-        if (chosenProject != null){
+        if (chosenProject != null) {
             Displays.printHighlight("Projet sélectionné : ", this.chosenProject.title);
-            if (chosenColumn != null){
+            if (chosenColumn != null) {
                 Displays.printHighlight("Colonne sélectionnée : ", this.chosenColumn.title);
             }
-            if (chosenTask != null){
+            if (chosenTask != null) {
                 Displays.printHighlight("Tâche sélectionnée : ", this.chosenTask.title);
             }
             Displays.printLine();
@@ -140,7 +139,7 @@ public class Cli {
         } while (choice != 0);
     }
 
-    void createProject(){
+    void createProject() {
         clearConsole();
         Displays.printTitle("Création d'un nouveau projet");
         ProjectService projectService = new ProjectService();
@@ -152,18 +151,16 @@ public class Cli {
                 .block();
     }
 
-    void useProject(){
+    void useProject() {
         clearConsole();
         Displays.printTitle("Choix d'un projet");
         ProjectService projectService = new ProjectService();
         Mono<Project[]> allProjects = projectService.getAllProjects(apiClient.getWebClient());
-        allProjects.doOnSuccess(p ->{
-            this.projects = p;
-        })
+        allProjects.doOnSuccess(p -> this.projects = p)
                 .onErrorReturn(new Project[]{})
                 .block();
 
-        if (this.projects != null){
+        if (this.projects != null) {
             StringBuilder askProjects = new StringBuilder();
             for (int i = 0; i < this.projects.length; i++) {
                 Project p = this.projects[i];
@@ -247,9 +244,7 @@ public class Cli {
         GetAllTasksRequest getAllTasksRequest = new GetAllTasksRequest(this.chosenColumn.id);
         Mono<Task[]> allTasks = columnService.getAllTasks(apiClient.getWebClient(), getAllTasksRequest);
 
-        allTasks.doOnSuccess(t -> {
-            this.tasks = t;
-        })
+        allTasks.doOnSuccess(t -> this.tasks = t)
                 .onErrorReturn(new Task[]{})
                 .block();
 
@@ -310,13 +305,11 @@ public class Cli {
         GetAllChecklistsRequest getAllChecklistsRequest = new GetAllChecklistsRequest(this.chosenTask.id);
         Mono<Checklist[]> allChecklists = taskService.getAllChecklists(apiClient.getWebClient(), getAllChecklistsRequest);
 
-        allChecklists.doOnSuccess(c -> {
-            this.checklists = c;
-        })
+        allChecklists.doOnSuccess(c -> this.checklists = c)
                 .onErrorReturn(new Checklist[]{})
                 .block();
 
-        if (this.checklists != null){
+        if (this.checklists != null) {
             StringBuilder askChecklists = new StringBuilder();
             for (int i = 0; i < this.checklists.length; i++) {
                 Checklist c = this.checklists[i];
@@ -352,13 +345,11 @@ public class Cli {
         GetAllColumnsRequest getAllColumnsRequest = new GetAllColumnsRequest(this.chosenProject.id);
         Mono<Column[]> allColumns = projectService.getAllColumns(apiClient.getWebClient(), getAllColumnsRequest);
 
-        allColumns.doOnSuccess(c -> {
-            this.columns = c;
-        })
+        allColumns.doOnSuccess(c -> this.columns = c)
                 .onErrorReturn(new Column[]{})
                 .block();
 
-        if (this.columns != null){
+        if (this.columns != null) {
             StringBuilder askColumns = new StringBuilder();
             for (int i = 0; i < this.columns.length; i++) {
                 Column c = this.columns[i];
@@ -407,17 +398,16 @@ public class Cli {
         return (answer.equals("Y") || answer.equals("y"));
     }
 
-    Integer askMultipleChoices(int nbOfChoices){
+    Integer askMultipleChoices(int nbOfChoices) {
         String choice;
         int choiceValue;
 
-        if (nbOfChoices > 1){
-            do{
+        if (nbOfChoices > 1) {
+            do {
                 choice = ask("Votre choix :");
                 choiceValue = Integer.parseInt(choice);
             } while (choiceValue > nbOfChoices - 1 || choiceValue < 0);
-        }
-        else if (nbOfChoices == 1) return 0;
+        } else if (nbOfChoices == 1) return 0;
         else return 0;
 
         return choiceValue;

@@ -1,7 +1,6 @@
 package com.togetherweareone.request.projectRequest;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonAutoDetect
 public class CreateProjectRequest {
