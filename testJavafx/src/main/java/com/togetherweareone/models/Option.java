@@ -6,6 +6,9 @@ public class Option {
     public String title;
     public Boolean checked;
 
+    public Option(){
+    }
+
     public Option(String title, Boolean checked) {
         this.title = title;
         this.checked = checked;
