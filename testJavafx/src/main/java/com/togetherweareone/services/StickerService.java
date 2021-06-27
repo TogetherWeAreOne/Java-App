@@ -22,21 +22,21 @@ public class StickerService {
 
     public Mono<Void> updateSticker(WebClient webClient, UpdateStickerRequest request) {
         return webClient.put()
-                .uri("project/sticker/" + request.getStickerId() + "/update")
+                .uri("/project/sticker/" + request.getStickerId() + "/update")
                 .retrieve()
                 .bodyToMono(Void.class);
     }
 
     public Mono<Void> deleteSticker(WebClient webClient, DeleteStickerRequest request) {
         return webClient.delete()
-                .uri("project/" + request.getProjectId() + "/sticker/" + request.getStrickerId() + "/delete")
+                .uri("/project/" + request.getProjectId() + "/sticker/" + request.getStrickerId() + "/delete")
                 .retrieve()
                 .bodyToMono(Void.class);
     }
 
     public Mono<Sticker[]> getAllSticker(WebClient webClient) {
         return webClient.get()
-                .uri("project/sticker/get/all")
+                .uri("/project/sticker/get/all")
                 .retrieve()
                 .bodyToMono(Sticker[].class);
     }

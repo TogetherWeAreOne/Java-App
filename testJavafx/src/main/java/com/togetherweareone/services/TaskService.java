@@ -24,7 +24,7 @@ public class TaskService {
 
     public Mono<Void> updateTask(WebClient webClient, UpdateTaskRequest request) {
         return webClient.put()
-                .uri("project/task/" + request.getTaskId() + "/update")
+                .uri("/project/task/" + request.getTaskId() + "/update")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), UpdateTaskRequest.class)
@@ -34,14 +34,14 @@ public class TaskService {
 
     public Mono<Void> deleteTask(WebClient webClient, DeleteTaskRequest request) {
         return webClient.delete()
-                .uri("project/" + request.getProjectId() + "/column/task/" + request.getTaskId() + "/delete")
+                .uri("/project/" + request.getProjectId() + "/column/task/" + request.getTaskId() + "/delete")
                 .retrieve()
                 .bodyToMono(Void.class);
     }
 
     public Mono<Checklist[]> getAllChecklists(WebClient webClient, GetAllChecklistsRequest request) {
         return webClient.get()
-                .uri("project/column/task/" + request.getTaskId() + "/get/allChecklist")
+                .uri("/project/column/task/" + request.getTaskId() + "/get/allChecklist")
                 .retrieve()
                 .bodyToMono(Checklist[].class);
     }
