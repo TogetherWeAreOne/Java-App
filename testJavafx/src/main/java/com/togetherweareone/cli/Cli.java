@@ -4,8 +4,10 @@ import com.togetherweareone.api.ApiClient;
 import com.togetherweareone.models.*;
 import com.togetherweareone.request.authRequest.LoginRequest;
 import com.togetherweareone.request.checklistRequest.CreateChecklistRequest;
+import com.togetherweareone.request.checklistRequest.GetAllOptionsRequest;
 import com.togetherweareone.request.columnRequest.CreateColumnRequest;
 import com.togetherweareone.request.columnRequest.GetAllTasksRequest;
+import com.togetherweareone.request.optionRequest.CreateOptionRequest;
 import com.togetherweareone.request.projectRequest.CreateProjectRequest;
 import com.togetherweareone.request.projectRequest.GetAllColumnsRequest;
 import com.togetherweareone.request.taskRequest.CreateTaskRequest;
@@ -30,6 +32,7 @@ public class Cli {
     Task chosenTask;
     Checklist[] checklists;
     Checklist chosenChecklist;
+    Option[] options;
 
     public Cli() {
         this.authService = new AuthService();
@@ -174,7 +177,10 @@ public class Cli {
                 chosenProject = this.projects[choice];
                 printChooseColumns();
             }
-        } else Displays.printInformation("Aucun projet n'est disponible !");
+        } else {
+            Displays.printInformation("Aucun projet n'est disponible !");
+            waitInput();
+        }
     }
 
     void printChooseColumns() {
@@ -263,7 +269,10 @@ public class Cli {
                 chosenTask = this.tasks[choice];
                 printChooseChecklist();
             }
-        } else Displays.printInformation("Aucune tâche n'est disponible !");
+        } else {
+            Displays.printInformation("Aucune tâche n'est disponible !");
+            waitInput();
+        }
     }
 
     void printChooseChecklist() {
@@ -322,9 +331,67 @@ public class Cli {
 
             if (choice != null) {
                 chosenChecklist = this.checklists[choice];
-                //printChooseOption();
+                printChooseOption();
             }
+        } else {
+            Displays.printInformation("Aucune checklist n'est disponible !");
+            waitInput();
+        }
+    }
+
+    void printChooseOption() {
+        int choice;
+        do {
+            clearConsole();
+            Displays.printInformation("Que voulez-vous faire ?");
+            Displays.printInformation("1 : Créer une nouvelle option\n" +
+                    "2 : Voir la liste des options existantes\n" +
+                    "0 : Retourner au choix de checklist"
+            );
+
+            choice = askMultipleChoices(3);
+
+            switch (choice) {
+                case 1 -> createOption();
+                case 2 -> seeOptions();
+            }
+
+        } while (choice != 0);
+    }
+
+    void createOption() {
+        clearConsole();
+        Displays.printTitle("Création d'une nouvelle option");
+        OptionService optionService = new OptionService();
+        String title = ask("Titre :");
+        CreateOptionRequest createOptionRequest = new CreateOptionRequest(title, this.chosenChecklist.id);
+        Mono<Option> option = optionService.createOption(apiClient.getWebClient(), createOptionRequest);
+        option.onErrorReturn(new Option())
+                .block();
+    }
+
+    void seeOptions() {
+        clearConsole();
+        Displays.printTitle("Affichage des options");
+        ChecklistService checklistService = new ChecklistService();
+        GetAllOptionsRequest getAllOptionsRequest = new GetAllOptionsRequest(this.chosenChecklist.id);
+        Mono<Option[]> allOptions = checklistService.getAllOptions(apiClient.getWebClient(), getAllOptionsRequest);
+
+        allOptions.doOnSuccess(o -> this.options = o)
+                .onErrorReturn(new Option[]{})
+                .block();
+
+        if (this.options != null) {
+            StringBuilder askOptions = new StringBuilder();
+            for (int i = 0; i < this.options.length; i++) {
+                Option c = this.options[i];
+                askOptions.append(i).append(": ").append(c.id).append(" / ").append(c.title).append("\n");
+            }
+
+            Displays.printInformation(askOptions.toString());
         } else Displays.printInformation("Aucune checklist n'est disponible !");
+
+        waitInput();
     }
 
     void createColumn() {
@@ -364,7 +431,10 @@ public class Cli {
                 chosenColumn = this.columns[choice];
                 printChooseTask();
             }
-        } else Displays.printInformation("Aucune colonne n'est disponible !");
+        } else {
+            Displays.printInformation("Aucune colonne n'est disponible !");
+            waitInput();
+        }
     }
 
     void handleUserLogin(User user) {
@@ -417,6 +487,9 @@ public class Cli {
     Fonctions usuelles d'écriture de la console
      */
 
+    void waitInput(){
+        ask("Appuyez sur Entrée pour continuer ...");
+    }
 
     String ask(String text) {
         return askDefault(text, false);
