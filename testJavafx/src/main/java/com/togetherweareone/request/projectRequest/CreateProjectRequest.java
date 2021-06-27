@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect
 public class CreateProjectRequest {
 
-
     public String title;
     public String description;
 

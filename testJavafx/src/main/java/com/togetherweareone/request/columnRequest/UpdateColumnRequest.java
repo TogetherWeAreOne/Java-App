@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 public class UpdateColumnRequest {
 
     public String title;
+    public String columnId;
 
-    public UpdateColumnRequest(String title) {
+    public UpdateColumnRequest(String title, String columnId) {
         this.title = title;
+        this.columnId = columnId;
     }
 
     public String getTitle() {
@@ -17,5 +19,13 @@ public class UpdateColumnRequest {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(String columnId) {
+        this.columnId = columnId;
     }
 }

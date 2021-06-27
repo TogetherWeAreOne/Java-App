@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 public class CreateColumnRequest {
 
     public String title;
+    public String projectId;
 
-    public CreateColumnRequest(String title) {
+    public CreateColumnRequest(String title, String projectId) {
         this.title = title;
+        this.projectId = projectId;
     }
 
     public String getTitle() {
@@ -17,5 +19,13 @@ public class CreateColumnRequest {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 }
