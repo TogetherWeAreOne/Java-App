@@ -57,7 +57,7 @@ public class Cli {
     /*
     Fonctions d'écriture de la console communes
      */
-    void printAccount(){
+    void printAccount() {
         clearConsole();
 
         Displays.printInformation("Que voulez-vous faire ?");
@@ -66,7 +66,7 @@ public class Cli {
         );
 
         int choice = askMultipleChoices(2);
-        if (choice == 0){
+        if (choice == 0) {
             printSignUp();
         } else {
             do {
@@ -241,7 +241,7 @@ public class Cli {
             }
         }
 
-        if (this.projects == null || this.projects.length == 0){
+        if (this.projects == null || this.projects.length == 0) {
             Displays.printInformation("Aucun projet n'est disponible !");
             waitInput();
         }
@@ -253,8 +253,16 @@ public class Cli {
             chosenColumn = null;
             clearConsole();
             Displays.printInformation("Que voulez-vous faire ?");
-            Displays.printInformation("1 : Créer une nouvelle colonne\n" +
-                    "2 : Accéder à une colonne existante\n" +
+            Displays.printInformation("1 : Créer une nouvelle colonne" +
+                    "\n" +
+                    "2 : Accéder à une colonne existante" +
+                    "\n" +
+                    "\n" +
+                    "3 : Modifier le projet" +
+                    "\n" +
+                    "4 : Supprimer le projet" +
+                    "\n" +
+                    "\n" +
                     "0 : Retourner au choix de projet"
             );
 
@@ -335,7 +343,7 @@ public class Cli {
             }
         }
 
-        if (this.tasks == null || this.tasks.length == 0){
+        if (this.tasks == null || this.tasks.length == 0) {
             Displays.printInformation("Aucune tâche n'est disponible !");
             waitInput();
         }
@@ -401,7 +409,7 @@ public class Cli {
             }
         }
 
-        if (this.checklists == null || this.checklists.length == 0){
+        if (this.checklists == null || this.checklists.length == 0) {
             Displays.printInformation("Aucune checklist n'est disponible !");
             waitInput();
         }
@@ -501,7 +509,7 @@ public class Cli {
             }
         }
 
-        if (this.columns == null || this.columns.length == 0){
+        if (this.columns == null || this.columns.length == 0) {
             Displays.printInformation("Aucune colonne n'est disponible !");
             waitInput();
         }
@@ -557,7 +565,7 @@ public class Cli {
     Fonctions usuelles d'écriture de la console
      */
 
-    void waitInput(){
+    void waitInput() {
         ask("Appuyez sur Entrée pour continuer ...");
     }
 
