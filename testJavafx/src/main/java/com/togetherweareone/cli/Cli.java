@@ -5,14 +5,21 @@ import com.togetherweareone.models.*;
 import com.togetherweareone.request.authRequest.LoginRequest;
 import com.togetherweareone.request.authRequest.SignInRequest;
 import com.togetherweareone.request.checklistRequest.CreateChecklistRequest;
+import com.togetherweareone.request.checklistRequest.DeleteChecklistRequest;
 import com.togetherweareone.request.checklistRequest.GetAllOptionsRequest;
+import com.togetherweareone.request.checklistRequest.UpdateChecklistRequest;
 import com.togetherweareone.request.columnRequest.CreateColumnRequest;
+import com.togetherweareone.request.columnRequest.DeleteColumnRequest;
 import com.togetherweareone.request.columnRequest.GetAllTasksRequest;
+import com.togetherweareone.request.columnRequest.UpdateColumnRequest;
 import com.togetherweareone.request.optionRequest.CreateOptionRequest;
-import com.togetherweareone.request.projectRequest.CreateProjectRequest;
-import com.togetherweareone.request.projectRequest.GetAllColumnsRequest;
+import com.togetherweareone.request.optionRequest.DeleteOptionRequest;
+import com.togetherweareone.request.optionRequest.UpdateOptionRequest;
+import com.togetherweareone.request.projectRequest.*;
 import com.togetherweareone.request.taskRequest.CreateTaskRequest;
+import com.togetherweareone.request.taskRequest.DeleteTaskRequest;
 import com.togetherweareone.request.taskRequest.GetAllChecklistsRequest;
+import com.togetherweareone.request.taskRequest.UpdateTaskRequest;
 import com.togetherweareone.services.*;
 import com.togetherweareone.utilities.ConsoleColors;
 import reactor.core.publisher.Mono;
@@ -36,6 +43,7 @@ public class Cli {
     Checklist[] checklists;
     Checklist chosenChecklist;
     Option[] options;
+    boolean deleted;
 
     public Cli() {
         this.authService = new AuthService();
@@ -46,8 +54,11 @@ public class Cli {
         this.tasks = null;
         this.checklists = null;
         this.options = null;
+        this.deleted = false;
 
-        printAccount();
+        do {
+            printAccount();
+        } while(loginError);
 
         printChooseProject();
 
@@ -66,14 +77,9 @@ public class Cli {
         );
 
         int choice = askMultipleChoices(2);
-        if (choice == 0) {
-            printSignUp();
-        } else {
-            do {
-                printLogin();
-            }
-            while (loginError);
-        }
+
+        if (choice == 0) printSignUp();
+        else printLogin();
     }
 
     void printSignUp() {
@@ -88,7 +94,7 @@ public class Cli {
         String pseudo = ask("Veuillez entrer votre pseudo :");
 
         SignInRequest signInRequest = new SignInRequest(email, password, firstname, lastname, pseudo);
-        Mono<User> signInUser = authService.signIn(apiClient.getWebClient(), signInRequest);
+        Mono<User> signInUser = authService.signUp(apiClient.getWebClient(), signInRequest);
 
         signInUser
                 .doOnSuccess(this::handleUserLogin)
@@ -106,7 +112,7 @@ public class Cli {
                 .block();
     }
 
-    void end() {
+    public void end() {
         Mono<Void> logoutRequest = authService.logout(apiClient.getWebClient());
         logoutRequest.block();
         clearConsole();
@@ -117,10 +123,17 @@ public class Cli {
         }
     }
 
+    public static void endApp() {
+        AuthService authService = new AuthService();
+        ApiClient apiClient = new ApiClient();
+        Mono<Void> logoutRequest = authService.logout(apiClient.getWebClient());
+        logoutRequest.block();
+    }
+
     void printHeader() {
         printHugeTitle();
         printPresentation();
-        if (loginError) {
+        if (this.loginError) {
             Displays.printAlert("Votre identifiant ou mot de passe est incorrect !");
             Displays.printLine();
         } else if (user != null) {
@@ -220,7 +233,8 @@ public class Cli {
         clearConsole();
         Displays.printTitle("Choix d'un projet");
         ProjectService projectService = new ProjectService();
-        Mono<Project[]> allProjects = projectService.getAllProjects(apiClient.getWebClient());
+        GetAllProjectsRequest getAllProjectsRequest = new GetAllProjectsRequest(this.user.id);
+        Mono<Project[]> allProjects = projectService.getAllProjectsForUser(apiClient.getWebClient(), getAllProjectsRequest);
         allProjects.doOnSuccess(p -> this.projects = p)
                 .onErrorReturn(new Project[]{})
                 .block();
@@ -266,14 +280,18 @@ public class Cli {
                     "0 : Retourner au choix de projet"
             );
 
-            choice = askMultipleChoices(3);
+            choice = askMultipleChoices(5);
 
             switch (choice) {
                 case 1 -> createColumn();
                 case 2 -> useColumn();
+                case 3 -> modifyProject();
+                case 4 -> deleteProject();
             }
+        } while (choice != 0 && !deleted);
 
-        } while (choice != 0);
+        if (deleted)
+            deleted = false;
     }
 
     void printChooseTask() {
@@ -282,19 +300,32 @@ public class Cli {
             chosenTask = null;
             clearConsole();
             Displays.printInformation("Que voulez-vous faire ?");
-            Displays.printInformation("1 : Créer une nouvelle tâche\n" +
-                    "2 : Accéder à une tâche existante\n" +
+            Displays.printInformation("1 : Créer une nouvelle tâche" +
+                    "\n" +
+                    "2 : Accéder à une tâche existante" +
+                    "\n" +
+                    "\n" +
+                    "3 : Modifier la colonne" +
+                    "\n" +
+                    "4 : Supprimer la colonne" +
+                    "\n" +
+                    "\n" +
                     "0 : Retourner au choix de colonne"
             );
 
-            choice = askMultipleChoices(3);
+            choice = askMultipleChoices(5);
 
             switch (choice) {
                 case 1 -> createTask();
                 case 2 -> useTask();
+                case 3 -> modifyColumn();
+                case 4 -> deleteColumn();
             }
 
-        } while (choice != 0);
+        } while (choice != 0 && !deleted);
+
+        if (deleted)
+            deleted = false;
     }
 
     private void createTask() {
@@ -355,19 +386,32 @@ public class Cli {
             chosenChecklist = null;
             clearConsole();
             Displays.printInformation("Que voulez-vous faire ?");
-            Displays.printInformation("1 : Créer une nouvelle checklist\n" +
-                    "2 : Accéder à une checklist existante\n" +
+            Displays.printInformation("1 : Créer une nouvelle checklist" +
+                    "\n" +
+                    "2 : Accéder à une checklist existante" +
+                    "\n" +
+                    "\n" +
+                    "3 : Modifier la tâche" +
+                    "\n" +
+                    "4 : Supprimer la tâche" +
+                    "\n" +
+                    "\n" +
                     "0 : Retourner au choix de tâche"
             );
 
-            choice = askMultipleChoices(3);
+            choice = askMultipleChoices(5);
 
             switch (choice) {
                 case 1 -> createChecklist();
                 case 2 -> useChecklist();
+                case 3 -> modifyTask();
+                case 4 -> deleteTask();
             }
 
-        } while (choice != 0);
+        } while (choice != 0 && !deleted);
+
+        if (deleted)
+            deleted = false;
     }
 
     void createChecklist() {
@@ -420,19 +464,37 @@ public class Cli {
         do {
             clearConsole();
             Displays.printInformation("Que voulez-vous faire ?");
-            Displays.printInformation("1 : Créer une nouvelle option\n" +
-                    "2 : Voir la liste des options existantes\n" +
+            Displays.printInformation("1 : Créer une nouvelle option" +
+                    "\n" +
+                    "2 : Voir la liste des options existantes" +
+                    "\n" +
+                    "3 : Modifier une option" +
+                    "\n" +
+                    "4 : Supprimer une option" +
+                    "\n" +
+                    "\n" +
+                    "5 : Modifier la checklist" +
+                    "\n" +
+                    "6 : Supprimer la checklist" +
+                    "\n" +
+                    "\n" +
                     "0 : Retourner au choix de checklist"
             );
 
-            choice = askMultipleChoices(3);
+            choice = askMultipleChoices(7);
 
             switch (choice) {
                 case 1 -> createOption();
                 case 2 -> seeOptions();
+                case 3, 4 -> useOption(choice == 3);
+                case 5 -> modifyChecklist();
+                case 6 -> deleteChecklist();
             }
 
-        } while (choice != 0);
+        } while (choice != 0 && !this.deleted);
+
+        if (this.deleted)
+            deleted = false;
     }
 
     void createOption() {
@@ -515,6 +577,280 @@ public class Cli {
         }
     }
 
+    void useOption(boolean modification) {
+        clearConsole();
+
+        Option chosenOption;
+
+        Displays.printTitle("Choix d'une option");
+        ChecklistService checklistService = new ChecklistService();
+        GetAllOptionsRequest getAllOptionsRequest = new GetAllOptionsRequest(this.chosenChecklist.id);
+        Mono<Option[]> allOptions = checklistService.getAllOptions(apiClient.getWebClient(), getAllOptionsRequest);
+
+        allOptions.doOnSuccess(o -> this.options = o)
+                .onErrorReturn(new Option[]{})
+                .block();
+
+        if (this.options != null) {
+            StringBuilder askOptions = new StringBuilder();
+
+            for (int i = 0; i < this.options.length; i++) {
+                Option o = this.options[i];
+                askOptions.append(i).append(": ").append(o.id).append(" / ").append(o.title).append("\n");
+            }
+
+            Displays.printInformation(askOptions.toString());
+
+            Integer choice = askMultipleChoices(this.options.length);
+
+            if (choice != null) {
+                chosenOption = this.options[choice];
+                if (modification)
+                    modifyOption(chosenOption);
+                else
+                    deleteOption(chosenOption);
+            }
+        }
+
+        if (this.options == null || this.options.length == 0) {
+            Displays.printInformation("Aucune option n'est disponible !");
+            waitInput();
+        }
+    }
+
+    void modifyProject() {
+        clearConsole();
+
+        boolean choice;
+        String title;
+        String description;
+
+        Displays.printTitle("Modification du projet : " + chosenProject.id + " / " + chosenProject.title);
+        ProjectService projectService = new ProjectService();
+
+        choice = askYesNo("Voulez-vous modifier le titre ?");
+        if (choice)
+            title = ask("Nouveau titre :");
+        else
+            title = this.chosenProject.getTitle();
+
+        choice = askYesNo("Voulez-vous modifier la description ?");
+        if (choice)
+            description = ask("Nouvelle description :");
+        else
+            description = this.chosenProject.getDescription();
+
+        UpdateProjectRequest updateProjectRequest = new UpdateProjectRequest(title, description, this.chosenProject.id);
+        Mono<Void> project = projectService.updateProject(apiClient.getWebClient(), updateProjectRequest);
+
+        project.block();
+    }
+
+    void modifyColumn() {
+        clearConsole();
+
+        boolean choice;
+        String title;
+
+        Displays.printTitle("Modification de la colonne : " + chosenColumn.id + " / " + chosenColumn.title);
+        ColumnService columnService = new ColumnService();
+
+        choice = askYesNo("Voulez-vous modifier le titre ?");
+        if (choice) {
+            title = ask("Nouveau titre :");
+            Displays.printError(title);
+        }
+        else
+            title = this.chosenColumn.getTitle();
+
+        UpdateColumnRequest updateColumnRequest = new UpdateColumnRequest(title, this.chosenColumn.id);
+        Mono<Void> column = columnService.updateColumn(apiClient.getWebClient(), updateColumnRequest);
+
+        column.block();
+    }
+
+    void modifyTask() {
+        clearConsole();
+
+        boolean choice;
+        String title;
+        String description;
+        String priority;
+
+        Displays.printTitle("Modification de la tâche : " + chosenTask.id + " / " + chosenTask.title);
+        TaskService taskService = new TaskService();
+
+        choice = askYesNo("Voulez-vous modifier le titre ?");
+        if (choice)
+            title = ask("Nouveau titre :");
+        else
+            title = this.chosenTask.getTitle();
+
+        choice = askYesNo("Voulez-vous modifier la description ?");
+        if (choice)
+            description = ask("Nouvelle description :");
+        else
+            description = this.chosenTask.getDescription();
+
+        choice = askYesNo("Voulez-vous modifier la priorité ?");
+        if (choice) {
+            Displays.printInformation("Nouvelle description :");
+            Displays.printInformation("Niveau de priorité :\n" +
+                    "0 : Bas\n" +
+                    "1 : Moyen\n" +
+                    "2 : Haut"
+            );
+            int choicePriority = askMultipleChoices(3);
+            priority = (choicePriority == 0 ? "LOW" : (choicePriority == 1 ? "MEDIUM" : "HIGH"));
+        } else
+            priority = this.chosenTask.getDescription();
+
+        UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest(this.chosenTask.id, title, description, priority);
+        Mono<Void> task = taskService.updateTask(apiClient.getWebClient(), updateTaskRequest);
+
+        task.block();
+    }
+
+    void modifyChecklist() {
+        clearConsole();
+
+        boolean choice;
+        String title;
+
+        Displays.printTitle("Modification de la checklist : " + chosenChecklist.id + " / " + chosenChecklist.title);
+        ChecklistService checklistService = new ChecklistService();
+
+        choice = askYesNo("Voulez-vous modifier le titre ?");
+        if (choice)
+            title = ask("Nouveau titre :");
+        else
+            title = this.chosenChecklist.getTitle();
+
+        UpdateChecklistRequest updateChecklistRequest = new UpdateChecklistRequest(title, this.chosenChecklist.id);
+        Mono<Void> checklist = checklistService.updateChecklist(apiClient.getWebClient(), updateChecklistRequest);
+
+        checklist.block();
+    }
+
+    void modifyOption(Option option) {
+        clearConsole();
+
+        boolean choice;
+        String title;
+
+        Displays.printTitle("Modification de l'option : " + option.id + " / " + option.title);
+        OptionService optionService = new OptionService();
+
+        choice = askYesNo("Voulez-vous modifier le titre ?");
+        if (choice)
+            title = ask("Nouveau titre :");
+        else
+            title = this.chosenProject.getTitle();
+
+        UpdateOptionRequest updateOptionRequest = new UpdateOptionRequest(title, this.chosenProject.id);
+        Mono<Void> optionUpdate = optionService.updateOption(apiClient.getWebClient(), updateOptionRequest);
+
+        optionUpdate.block();
+    }
+
+    void deleteProject() {
+        clearConsole();
+
+        Displays.printTitle("Suppression du projet : " + this.chosenProject.id + " / " + this.chosenProject.title);
+
+        boolean choice = askYesNo("Voulez-vous supprimer le projet ?");
+
+        if (choice) {
+
+            ProjectService service = new ProjectService();
+
+            DeleteProjectRequest request = new DeleteProjectRequest(this.chosenProject.id);
+            Mono<Void> requestResult = service.deleteProject(apiClient.getWebClient(), request);
+
+            requestResult.block();
+
+            this.deleted = true;
+        }
+    }
+
+    void deleteColumn() {
+        clearConsole();
+
+        Displays.printTitle("Suppression de la colonne : " + this.chosenColumn.id + " / " + this.chosenColumn.title);
+
+        boolean choice = askYesNo("Voulez-vous supprimer la colonne ?");
+
+        if (choice) {
+
+            ColumnService service = new ColumnService();
+
+            DeleteColumnRequest request = new DeleteColumnRequest(this.chosenProject.id, this.chosenColumn.id);
+            Mono<Void> requestResult = service.deleteColumn(apiClient.getWebClient(), request);
+
+            requestResult.block();
+
+            this.deleted = true;
+        }
+    }
+
+    void deleteTask() {
+        clearConsole();
+
+        Displays.printTitle("Suppression de la tâche : " + this.chosenTask.id + " / " + this.chosenTask.title);
+
+        boolean choice = askYesNo("Voulez-vous supprimer la tâche ?");
+
+        if (choice) {
+
+            TaskService service = new TaskService();
+
+            DeleteTaskRequest request = new DeleteTaskRequest(this.chosenProject.id, this.chosenTask.id);
+            Mono<Void> requestResult = service.deleteTask(apiClient.getWebClient(), request);
+
+            requestResult.block();
+
+            this.deleted = true;
+        }
+    }
+
+    void deleteChecklist() {
+        clearConsole();
+
+        Displays.printTitle("Suppression de la checklist : " + this.chosenChecklist.id + " / " + this.chosenChecklist.title);
+
+        boolean choice = askYesNo("Voulez-vous supprimer la checklist ?");
+
+        if (choice) {
+
+            ChecklistService service = new ChecklistService();
+
+            DeleteChecklistRequest request = new DeleteChecklistRequest(this.chosenProject.id, this.chosenChecklist.id);
+            Mono<Void> requestResult = service.deleteChecklist(apiClient.getWebClient(), request);
+
+            requestResult.block();
+
+            this.deleted = true;
+        }
+    }
+
+    void deleteOption(Option option) {
+        clearConsole();
+
+        Displays.printTitle("Suppression de l'option : " + option.id + " / " + option.title);
+
+        boolean choice = askYesNo("Voulez-vous supprimer l'option ?");
+
+        if (choice) {
+
+            OptionService service = new OptionService();
+
+            DeleteOptionRequest request = new DeleteOptionRequest(this.chosenProject.id, this.chosenChecklist.id);
+            Mono<Void> requestResult = service.deleteOption(apiClient.getWebClient(), request);
+
+            requestResult.block();
+        }
+    }
+
     void handleUserLogin(User user) {
         this.loginError = false;
         this.user = user;
@@ -553,7 +889,11 @@ public class Cli {
         if (nbOfChoices > 1) {
             do {
                 choice = ask("Votre choix :");
-                choiceValue = Integer.parseInt(choice);
+                try {
+                    choiceValue = Integer.parseInt(choice);
+                } catch (NumberFormatException ignored){
+                    choiceValue = nbOfChoices;
+                }
             } while (choiceValue > nbOfChoices - 1 || choiceValue < 0);
         } else if (nbOfChoices == 1) return 0;
         else return null;

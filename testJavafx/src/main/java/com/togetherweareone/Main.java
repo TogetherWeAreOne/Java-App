@@ -47,6 +47,9 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+
+        Runtime.getRuntime().addShutdownHook(new Thread(Cli::endApp));
+
         if (args.length > 0 && args[0].equals("-cli")) {
             new Cli();
         } else {
