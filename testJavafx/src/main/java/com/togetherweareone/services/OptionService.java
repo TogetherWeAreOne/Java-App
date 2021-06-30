@@ -12,7 +12,7 @@ public class OptionService {
 
     public Mono<Option> createOption(WebClient webClient, CreateOptionRequest request) {
         return webClient.post()
-                .uri("/project/column/task/checklist/" + request.getChecklistId() + "/option/create")
+                .uri("/option/create/" + request.getChecklistId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CreateOptionRequest.class)
@@ -22,14 +22,14 @@ public class OptionService {
 
     public Mono<Void> updateOption(WebClient webClient, UpdateOptionRequest request) {
         return webClient.put()
-                .uri("/project/option/" + request.getOptionId() + "/update")
+                .uri("/option/update/" + request.getOptionId())
                 .retrieve()
                 .bodyToMono(Void.class);
     }
 
     public Mono<Void> deleteOption(WebClient webClient, DeleteOptionRequest request) {
         return webClient.delete()
-                .uri("/project/" + request.getProjectId() + "/column/task/checklist/option/" + request.getOptionId() + "/delete")
+                .uri("/option/delete/" + request.getOptionId() + "/" + request.getProjectId())
                 .retrieve()
                 .bodyToMono(Void.class);
     }

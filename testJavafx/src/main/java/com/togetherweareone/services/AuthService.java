@@ -23,10 +23,10 @@ public class AuthService {
                 .bodyToMono(User.class);
     }
 
-    public Mono<User> signIn(WebClient webClient, SignInRequest request) {
+    public Mono<User> signUp(WebClient webClient, SignInRequest request) {
 
         return webClient.post()
-                .uri("/auth/signin")
+                .uri("/auth/signup")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), SignInRequest.class)
@@ -41,6 +41,4 @@ public class AuthService {
                 .retrieve()
                 .bodyToMono(Void.class);
     }
-
-
 }

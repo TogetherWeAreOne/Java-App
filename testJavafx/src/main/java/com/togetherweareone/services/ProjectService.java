@@ -2,10 +2,7 @@ package com.togetherweareone.services;
 
 import com.togetherweareone.models.Column;
 import com.togetherweareone.models.Project;
-import com.togetherweareone.request.projectRequest.CreateProjectRequest;
-import com.togetherweareone.request.projectRequest.DeleteProjectRequest;
-import com.togetherweareone.request.projectRequest.GetAllColumnsRequest;
-import com.togetherweareone.request.projectRequest.UpdateProjectRequest;
+import com.togetherweareone.request.projectRequest.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -34,21 +31,28 @@ public class ProjectService {
 
     public Mono<Column[]> getAllColumns(WebClient webClient, GetAllColumnsRequest request) {
         return webClient.get()
-                .uri("/project/" + request.getProjectId() + "/get/allColumn")
+                .uri("/project/allColumns/" + request.getProjectId())
                 .retrieve()
                 .bodyToMono(Column[].class);
     }
 
     public Mono<Project[]> getAllProjects(WebClient webClient) {
         return webClient.get()
-                .uri("/project/get/all")
+                .uri("/project/all/")
+                .retrieve()
+                .bodyToMono(Project[].class);
+    }
+
+    public Mono<Project[]> getAllProjectsForUser(WebClient webClient, GetAllProjectsRequest request) {
+        return webClient.get()
+                .uri("/project/all/" + request.getUserId())
                 .retrieve()
                 .bodyToMono(Project[].class);
     }
 
     public Mono<Void> deleteProject(WebClient webClient, DeleteProjectRequest request) {
         return webClient.delete()
-                .uri("project/" + request.getProjectId() + "/delete")
+                .uri("/project/delete/" + request.getProjectId())
                 .retrieve()
                 .bodyToMono(Void.class);
     }

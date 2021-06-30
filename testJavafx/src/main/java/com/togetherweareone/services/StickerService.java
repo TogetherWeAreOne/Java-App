@@ -12,7 +12,7 @@ public class StickerService {
 
     public Mono<Sticker> createSticker(WebClient webClient, CreateStickerRequest request) {
         return webClient.post()
-                .uri("/project/" + request.getProjectId() + "/sticker/create")
+                .uri("/sticker/create/" + request.getProjectId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CreateStickerRequest.class)
@@ -22,21 +22,21 @@ public class StickerService {
 
     public Mono<Void> updateSticker(WebClient webClient, UpdateStickerRequest request) {
         return webClient.put()
-                .uri("/project/sticker/" + request.getStickerId() + "/update")
+                .uri("/sticker/update/" + request.getStickerId())
                 .retrieve()
                 .bodyToMono(Void.class);
     }
 
     public Mono<Void> deleteSticker(WebClient webClient, DeleteStickerRequest request) {
         return webClient.delete()
-                .uri("/project/" + request.getProjectId() + "/sticker/" + request.getStrickerId() + "/delete")
+                .uri("/sticker/delete/"  + request.getStrickerId() + "/" + request.getProjectId())
                 .retrieve()
                 .bodyToMono(Void.class);
     }
 
     public Mono<Sticker[]> getAllSticker(WebClient webClient) {
         return webClient.get()
-                .uri("/project/sticker/get/all")
+                .uri("/sticker/all")
                 .retrieve()
                 .bodyToMono(Sticker[].class);
     }

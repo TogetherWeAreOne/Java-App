@@ -14,7 +14,7 @@ public class ChecklistService {
 
     public Mono<Checklist> createChecklist(WebClient webClient, CreateChecklistRequest request) {
         return webClient.post()
-                .uri("/project/column/task/" + request.getTaskId() + "/checklist/create")
+                .uri("/checklist/create/" + request.getTaskId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), CreateChecklistRequest.class)
@@ -24,7 +24,7 @@ public class ChecklistService {
 
     public Mono<Void> updateChecklist(WebClient webClient, UpdateChecklistRequest request) {
         return webClient.put()
-                .uri("/project/checklist/" + request.getChecklistId() + "/update")
+                .uri("/checklist/update/" + request.getChecklistId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), UpdateChecklistRequest.class)
@@ -34,7 +34,7 @@ public class ChecklistService {
 
     public Mono<Option[]> getAllOptions(WebClient webClient, GetAllOptionsRequest request) {
         return webClient.get()
-                .uri("/project/column/task/checklist/" + request.getChecklistId() + "/get/allOptions")
+                .uri("/checklist/allOptions/" + request.getChecklistId())
                 .retrieve()
                 .bodyToMono(Option[].class);
 
@@ -42,7 +42,7 @@ public class ChecklistService {
 
     public Mono<Void> deleteChecklist(WebClient webClient, DeleteChecklistRequest request) {
         return webClient.delete()
-                .uri("/project/" + request.getProjectId() + "/column/task/checklist/" + request.getChecklistId() + "/delete")
+                .uri("/checklist/delete/" + request.getChecklistId() + "/" + request.getProjectId())
                 .retrieve()
                 .bodyToMono(Void.class);
     }
