@@ -3,7 +3,7 @@ package com.togetherweareone.cli;
 import com.togetherweareone.api.ApiClient;
 import com.togetherweareone.models.*;
 import com.togetherweareone.request.authRequest.LoginRequest;
-import com.togetherweareone.request.authRequest.SignInRequest;
+import com.togetherweareone.request.authRequest.SignUpRequest;
 import com.togetherweareone.request.checklistRequest.CreateChecklistRequest;
 import com.togetherweareone.request.checklistRequest.DeleteChecklistRequest;
 import com.togetherweareone.request.checklistRequest.GetAllOptionsRequest;
@@ -26,8 +26,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Scanner;
 
-//TODO: Implement Updates and Deletions
-
 public class Cli {
 
     AuthService authService;
@@ -44,25 +42,30 @@ public class Cli {
     Checklist chosenChecklist;
     Option[] options;
     boolean deleted;
+    boolean quit;
 
     public Cli() {
         this.authService = new AuthService();
         this.apiClient = new ApiClient();
-        this.user = null;
         this.projects = null;
         this.columns = null;
         this.tasks = null;
         this.checklists = null;
         this.options = null;
         this.deleted = false;
+        this.quit = true;
 
         do {
-            printAccount();
-        } while(loginError);
+            this.user = null;
 
-        printChooseProject();
+            do {
+                printAccount();
+            } while (loginError);
 
-        end();
+            printChooseProject();
+
+            end();
+        } while(!quit);
     }
 
     /*
@@ -93,10 +96,10 @@ public class Cli {
         String lastname = ask("Veuillez entrer votre nom de famille :");
         String pseudo = ask("Veuillez entrer votre pseudo :");
 
-        SignInRequest signInRequest = new SignInRequest(email, password, firstname, lastname, pseudo);
-        Mono<User> signInUser = authService.signUp(apiClient.getWebClient(), signInRequest);
+        SignUpRequest signUpRequest = new SignUpRequest(email, password, firstname, lastname, pseudo);
+        Mono<User> signUpUser = authService.signUp(apiClient.getWebClient(), signUpRequest);
 
-        signInUser
+        signUpUser
                 .doOnSuccess(this::handleUserLogin)
                 .doOnError(this::handleUserLoginError)
                 .onErrorReturn(new User())
@@ -116,18 +119,7 @@ public class Cli {
         Mono<Void> logoutRequest = authService.logout(apiClient.getWebClient());
         logoutRequest.block();
         clearConsole();
-        if (!askQuit()) {
-            this.user = null;
-            clearConsole();
-            printAccount();
-        }
-    }
-
-    public static void endApp() {
-        AuthService authService = new AuthService();
-        ApiClient apiClient = new ApiClient();
-        Mono<Void> logoutRequest = authService.logout(apiClient.getWebClient());
-        logoutRequest.block();
+        this.quit = askQuit();
     }
 
     void printHeader() {
@@ -866,9 +858,9 @@ public class Cli {
 
         do {
             answer = ask(text + " (Y/N)");
-        } while (!answer.equals("Y") && !answer.equals("N"));
+        } while (!answer.equals("Y") && !answer.equals("N") && !answer.equals("y") && !answer.equals("n"));
 
-        return answer.equals("Y");
+        return (answer.equals("Y") || answer.equals("y"));
     }
 
     boolean askQuit() {
