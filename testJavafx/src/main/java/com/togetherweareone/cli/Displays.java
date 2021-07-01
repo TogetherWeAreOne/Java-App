@@ -4,7 +4,7 @@ import com.togetherweareone.utilities.ConsoleColors;
 
 public class Displays {
 
-    static void print(String text) {
+    public static void print(String text) {
         System.out.println(ConsoleColors.WHITE + text + ConsoleColors.RESET);
         printLine();
     }
