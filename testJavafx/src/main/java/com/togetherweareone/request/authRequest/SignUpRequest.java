@@ -3,7 +3,7 @@ package com.togetherweareone.request.authRequest;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect
-public class SignInRequest {
+public class SignUpRequest {
 
     public String email;
     public String password;
@@ -13,7 +13,7 @@ public class SignInRequest {
     public String initial;
     public String image;
 
-    public SignInRequest(String email, String password, String firstname, String lastname, String pseudo) {
+    public SignUpRequest(String email, String password, String firstname, String lastname, String pseudo) {
         this.email = email;
         this.password = password;
         this.firstname = firstname;
