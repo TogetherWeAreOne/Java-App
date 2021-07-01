@@ -30,8 +30,12 @@ module com.togetherweareone {
     opens com.togetherweareone.request.authRequest;
     opens com.togetherweareone.request.projectRequest;
 
+    opens com.togetherweareone to javafx.fxml;
+    opens com.togetherweareone.fx.controllers to javafx.fxml;
+
     exports com.togetherweareone to javafx.graphics, javafx.fxml;
     exports com.togetherweareone.controller;
     exports com.togetherweareone.models;
+    exports com.togetherweareone.fx to javafx.fxml, javafx.graphics;
 
 }
