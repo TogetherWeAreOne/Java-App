@@ -16,5 +16,4 @@ testJavafx.iml
 /logs/
 logs/
 /testJavafx/.idea/
-launch.bat - Shortcut.lnk
-launch_cli.bat - Shortcut.lnk
+*.lnk
