@@ -29,7 +29,7 @@ public class StickerService {
 
     public Mono<Void> deleteSticker(WebClient webClient, DeleteStickerRequest request) {
         return webClient.delete()
-                .uri("/sticker/delete/"  + request.getStrickerId() + "/" + request.getProjectId())
+                .uri("/sticker/delete/" + request.getStrickerId() + "/" + request.getProjectId())
                 .retrieve()
                 .bodyToMono(Void.class);
     }

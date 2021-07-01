@@ -15,10 +15,8 @@ import java.util.Objects;
 
 public class Account {
 
-    public Button buttonSignup;
-    public Button buttonLogin;
-
-    @FXML public void signupScene(ActionEvent e) throws IOException {
+    @FXML
+    public void signupScene(ActionEvent e) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("signup.fxml")));
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 
@@ -28,7 +26,8 @@ public class Account {
         stage.show();
     }
 
-    @FXML public void loginScene(ActionEvent e) throws IOException{
+    @FXML
+    public void loginScene(ActionEvent e) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("login.fxml")));
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
 

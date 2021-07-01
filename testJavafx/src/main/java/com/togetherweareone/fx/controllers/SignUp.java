@@ -2,7 +2,6 @@ package com.togetherweareone.fx.controllers;
 
 import com.togetherweareone.Main;
 import com.togetherweareone.api.ApiClient;
-import com.togetherweareone.cli.Displays;
 import com.togetherweareone.fx.Fx;
 import com.togetherweareone.models.User;
 import com.togetherweareone.request.authRequest.LoginRequest;
@@ -27,21 +26,26 @@ import java.util.Objects;
 public class SignUp {
 
 
-    @FXML public TextField emailTextField;
-    @FXML public TextField pwdTextField;
-    @FXML public TextField firstnameTextField;
-    @FXML public TextField nameTextField;
-    @FXML public TextField pseudoTextField;
-    @FXML public ProgressIndicator progressIndicator;
-    @FXML public Label errorLabel;
+    @FXML
+    public TextField emailTextField;
+    @FXML
+    public TextField pwdTextField;
+    @FXML
+    public TextField firstnameTextField;
+    @FXML
+    public TextField nameTextField;
+    @FXML
+    public TextField pseudoTextField;
+    @FXML
+    public ProgressIndicator progressIndicator;
+    @FXML
+    public Label errorLabel;
 
     boolean error;
 
     @FXML
     public void signup(ActionEvent e) throws IOException {
         errorLabel.setVisible(false);
-
-        progressIndicator.setVisible(true);
 
         this.error = false;
 
@@ -54,10 +58,10 @@ public class SignUp {
             Mono<User> signUpUser = authService.signUp(apiClient.getWebClient(), signUpRequest);
 
             signUpUser
-                .doOnSuccess(this::handleOk)
-                .doOnError(this::handleErrorSignup)
-                .onErrorReturn(new User())
-                .block();
+                    .doOnSuccess(this::handleOk)
+                    .doOnError(this::handleErrorSignup)
+                    .onErrorReturn(new User())
+                    .block();
 
             if (!this.error) {
 
@@ -80,11 +84,9 @@ public class SignUp {
                     stage.show();
                 }
             }
-        }
-        else {
+        } else {
             handleError("Veuillez remplir tout les champs.");
         }
-        progressIndicator.setVisible(false);
     }
 
     void handleOk(User user) {
@@ -92,15 +94,15 @@ public class SignUp {
         this.error = false;
     }
 
-    void handleErrorSignup(Throwable throwable){
+    void handleErrorSignup(Throwable throwable) {
         handleError("Cet email est déjà utilisé.");
     }
 
-    void handleErrorLogin(Throwable throwable){
+    void handleErrorLogin(Throwable throwable) {
         handleError("Il y a eu un problème à la connexion.");
     }
 
-    void handleError(String text){
+    void handleError(String text) {
         error = true;
         Platform.runLater(() -> {
             errorLabel.setText(text);

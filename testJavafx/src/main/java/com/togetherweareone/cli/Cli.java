@@ -65,7 +65,7 @@ public class Cli {
             printChooseProject();
 
             end();
-        } while(!quit);
+        } while (!quit);
     }
 
     /*
@@ -651,8 +651,7 @@ public class Cli {
         if (choice) {
             title = ask("Nouveau titre :");
             Displays.printError(title);
-        }
-        else
+        } else
             title = this.chosenColumn.getTitle();
 
         UpdateColumnRequest updateColumnRequest = new UpdateColumnRequest(title, this.chosenColumn.id);
@@ -883,7 +882,7 @@ public class Cli {
                 choice = ask("Votre choix :");
                 try {
                     choiceValue = Integer.parseInt(choice);
-                } catch (NumberFormatException ignored){
+                } catch (NumberFormatException ignored) {
                     choiceValue = nbOfChoices;
                 }
             } while (choiceValue > nbOfChoices - 1 || choiceValue < 0);
