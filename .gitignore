@@ -1,5 +1,6 @@
 /testJavafx/.idea/libraries/
 /.idea/
+.idea/
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -13,3 +14,7 @@ buildNumber.properties
 testJavafx.iml
 /out/
 /logs/
+logs/
+/testJavafx/.idea/
+launch.bat - Shortcut.lnk
+launch_cli.bat - Shortcut.lnk
