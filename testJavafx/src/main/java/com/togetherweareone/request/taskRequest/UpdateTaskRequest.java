@@ -9,12 +9,14 @@ public class UpdateTaskRequest {
     public String title;
     public String description;
     public String priority;
+    public String state;
 
-    public UpdateTaskRequest(String taskId, String title, String description, String priority) {
+    public UpdateTaskRequest(String taskId, String title, String description, String priority, String state) {
         this.taskId = taskId;
         this.title = title;
         this.description = description;
         this.priority = priority;
+        this.state = state;
     }
 
     public String getTaskId() {
@@ -47,5 +49,13 @@ public class UpdateTaskRequest {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

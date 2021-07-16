@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+          prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16"
+          fx:controller="com.togetherweareone.fx.controllers.EditProject">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+        <GridPane>
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label text="Modification de Projet" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                       GridPane.valignment="CENTER">
+                    <font>
+                        <Font size="24.0"/>
+                    </font>
+                </Label>
+                <Button cancelButton="true" mnemonicParsing="false" onAction="#goBack" prefHeight="30.0"
+                        prefWidth="75.0" text="Retour" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+            </children>
+        </GridPane>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+            <children>
+                <Label alignment="CENTER" layoutX="75.0" layoutY="25.0" prefHeight="50.0" prefWidth="100.0"
+                       text="Titre :">
+                    <font>
+                        <Font size="16.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="titleTextField" layoutX="225.0" layoutY="35.0" prefHeight="30.0" prefWidth="325.0"/>
+            </children>
+        </AnchorPane>
+        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+            <children>
+                <Label alignment="CENTER" layoutX="75.0" layoutY="25.0" prefHeight="50.0" prefWidth="100.0"
+                       text="Description :">
+                    <font>
+                        <Font size="16.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="descriptionTextField" layoutX="225.0" layoutY="35.0" prefHeight="30.0"
+                           prefWidth="325.0"/>
+            </children>
+        </AnchorPane>
+        <GridPane GridPane.rowIndex="3">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label fx:id="errorLabel" alignment="CENTER" textFill="#eb3131" GridPane.columnIndex="1"
+                       GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+                <Button mnemonicParsing="false" onAction="#deleteProject" prefHeight="30.0" prefWidth="100.0"
+                        text="Supprimer" textFill="RED" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+                <Button defaultButton="true" mnemonicParsing="false" onAction="#editProject" prefHeight="30.0"
+                        prefWidth="100.0" text="Modifier" GridPane.columnIndex="2" GridPane.halignment="CENTER"
+                        GridPane.valignment="CENTER"/>
+            </children>
+        </GridPane>
+    </children>
+</GridPane>

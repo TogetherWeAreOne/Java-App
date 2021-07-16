@@ -52,10 +52,10 @@ public class SignUp {
         if (emailTextField.getText().length() > 0 && pwdTextField.getText().length() > 0 && firstnameTextField.getText().length() > 0 && nameTextField.getText().length() > 0 && pseudoTextField.getText().length() > 0) {
 
             AuthService authService = new AuthService();
-            ApiClient apiClient = new ApiClient();
+            Fx.apiClient = new ApiClient();
 
             SignUpRequest signUpRequest = new SignUpRequest(emailTextField.getText(), pwdTextField.getText(), firstnameTextField.getText(), nameTextField.getText(), pseudoTextField.getText());
-            Mono<User> signUpUser = authService.signUp(apiClient.getWebClient(), signUpRequest);
+            Mono<User> signUpUser = authService.signUp(Fx.apiClient.getWebClient(), signUpRequest);
 
             signUpUser
                     .doOnSuccess(this::handleOk)
@@ -66,7 +66,7 @@ public class SignUp {
             if (!this.error) {
 
                 LoginRequest loginRequest = new LoginRequest(emailTextField.getText(), pwdTextField.getText());
-                Mono<User> loginUser = authService.login(apiClient.getWebClient(), loginRequest);
+                Mono<User> loginUser = authService.login(Fx.apiClient.getWebClient(), loginRequest);
 
                 loginUser
                         .doOnSuccess(this::handleOk)
@@ -75,10 +75,14 @@ public class SignUp {
                         .block();
 
                 if (!this.error) {
-                    Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("main.fxml")));
-                    Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+                    FXMLLoader root = new FXMLLoader(Main.class.getResource("main.fxml"));
 
-                    Scene scene = new Scene(root);
+                    Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(root.load());
+
+                    MainView mainViewController = root.getController();
+
+                    mainViewController.load();
 
                     stage.setScene(scene);
                     stage.show();
@@ -108,5 +112,16 @@ public class SignUp {
             errorLabel.setText(text);
             errorLabel.setVisible(true);
         });
+    }
+
+    @FXML
+    public void back(ActionEvent e) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("start.fxml")));
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.show();
     }
 }

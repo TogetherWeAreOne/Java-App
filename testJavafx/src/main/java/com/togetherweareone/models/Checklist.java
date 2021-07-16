@@ -6,16 +6,20 @@ public class Checklist {
 
     public String id;
     public String title;
+    public int percentage;
+    public String state;
     public ArrayList<Option> options;
 
     public Checklist() {
         this.options = new ArrayList<>();
     }
 
-    public Checklist(String id, String title, ArrayList<Option> options) {
+    public Checklist(String id, String title, ArrayList<Option> options, String state, int percentage) {
         this.id = id;
         this.title = title;
         this.options = options;
+        this.state = state;
+        this.percentage = percentage;
     }
 
     public String getId() {
@@ -42,12 +46,19 @@ public class Checklist {
         this.options = options;
     }
 
-    @Override
-    public String toString() {
-        return "Checklist{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", options=" + options +
-                '}';
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
     }
 }

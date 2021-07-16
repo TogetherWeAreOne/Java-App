@@ -4,14 +4,14 @@ public class Option {
 
     public String id;
     public String title;
-    public Boolean checked;
+    public String state;
 
     public Option() {
     }
 
-    public Option(String title, Boolean checked) {
+    public Option(String title, String state) {
         this.title = title;
-        this.checked = checked;
+        this.state = state;
     }
 
     public String getId() {
@@ -30,12 +30,12 @@ public class Option {
         this.title = title;
     }
 
-    public Boolean getChecked() {
-        return checked;
+    public String getState() {
+        return state;
     }
 
-    public void setChecked(Boolean checked) {
-        this.checked = checked;
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Option {
         return "Option{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
-                ", checked=" + checked +
+                ", state='" + state + '\'' +
                 '}';
     }
 }

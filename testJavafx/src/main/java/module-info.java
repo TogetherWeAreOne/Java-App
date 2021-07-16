@@ -29,6 +29,11 @@ module com.togetherweareone {
 
     opens com.togetherweareone.request.authRequest;
     opens com.togetherweareone.request.projectRequest;
+    opens com.togetherweareone.request.checklistRequest;
+    opens com.togetherweareone.request.columnRequest;
+    opens com.togetherweareone.request.optionRequest;
+    opens com.togetherweareone.request.stickerRequest;
+    opens com.togetherweareone.request.taskRequest;
 
     opens com.togetherweareone to javafx.fxml;
     opens com.togetherweareone.fx.controllers to javafx.fxml;
@@ -37,5 +42,6 @@ module com.togetherweareone {
     exports com.togetherweareone.controller;
     exports com.togetherweareone.models;
     exports com.togetherweareone.fx to javafx.fxml, javafx.graphics;
+
 
 }

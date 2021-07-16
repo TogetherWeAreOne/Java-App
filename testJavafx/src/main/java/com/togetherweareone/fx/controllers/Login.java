@@ -40,10 +40,10 @@ public class Login {
 
         if (emailTextField.getText().length() > 0 && pwdTextField.getText().length() > 0) {
             AuthService authService = new AuthService();
-            ApiClient apiClient = new ApiClient();
+            Fx.apiClient = new ApiClient();
 
             LoginRequest loginRequest = new LoginRequest(emailTextField.getText(), pwdTextField.getText());
-            Mono<User> loginUser = authService.login(apiClient.getWebClient(), loginRequest);
+            Mono<User> loginUser = authService.login(Fx.apiClient.getWebClient(), loginRequest);
 
             loginUser
                     .doOnSuccess(this::handleOk)
@@ -52,10 +52,13 @@ public class Login {
                     .block();
 
             if (!this.error) {
-                Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("main.fxml")));
-                Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+                FXMLLoader root = new FXMLLoader(Main.class.getResource("main.fxml"));
 
-                Scene scene = new Scene(root);
+                Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+                Scene scene = new Scene(root.load());
+
+                MainView mainViewController = root.getController();
+                mainViewController.load();
 
                 stage.setScene(scene);
                 stage.show();
@@ -71,7 +74,7 @@ public class Login {
     }
 
     void handleErrorLogin(Throwable throwable) {
-        handleError("Il y a eu un problème à la connexion.");
+        handleError("Votre combinaison email / mot de passe est incorrecte.");
     }
 
     void handleError(String text) {
@@ -81,4 +84,16 @@ public class Login {
             errorLabel.setVisible(true);
         });
     }
+
+    @FXML
+    public void back(ActionEvent e) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("start.fxml")));
+        Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }

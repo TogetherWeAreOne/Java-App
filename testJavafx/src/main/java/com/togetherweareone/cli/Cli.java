@@ -696,7 +696,7 @@ public class Cli {
         } else
             priority = this.chosenTask.getDescription();
 
-        UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest(this.chosenTask.id, title, description, priority);
+        UpdateTaskRequest updateTaskRequest = new UpdateTaskRequest(this.chosenTask.getId(), title, description, priority, this.chosenTask.getState());
         Mono<Void> task = taskService.updateTask(apiClient.getWebClient(), updateTaskRequest);
 
         task.block();
@@ -717,7 +717,7 @@ public class Cli {
         else
             title = this.chosenChecklist.getTitle();
 
-        UpdateChecklistRequest updateChecklistRequest = new UpdateChecklistRequest(title, this.chosenChecklist.id);
+        UpdateChecklistRequest updateChecklistRequest = new UpdateChecklistRequest(title, this.chosenChecklist.id, this.chosenChecklist.getState(), this.chosenChecklist.getPercentage());
         Mono<Void> checklist = checklistService.updateChecklist(apiClient.getWebClient(), updateChecklistRequest);
 
         checklist.block();
@@ -729,16 +729,18 @@ public class Cli {
         boolean choice;
         String title;
 
-        Displays.printTitle("Modification de l'option : " + option.id + " / " + option.title);
+        Displays.printTitle("Modification de l'option : " + option.id + " / " + option.getTitle());
         OptionService optionService = new OptionService();
 
         choice = askYesNo("Voulez-vous modifier le titre ?");
         if (choice)
             title = ask("Nouveau titre :");
         else
-            title = this.chosenProject.getTitle();
+            title = option.getTitle();
 
-        UpdateOptionRequest updateOptionRequest = new UpdateOptionRequest(title, this.chosenProject.id);
+        choice = askYesNo("Finir la tâche ?");
+
+        UpdateOptionRequest updateOptionRequest = new UpdateOptionRequest(title, option.getId(), choice ? "FINISHED" : "NOT_STARTED");
         Mono<Void> optionUpdate = optionService.updateOption(apiClient.getWebClient(), updateOptionRequest);
 
         optionUpdate.block();

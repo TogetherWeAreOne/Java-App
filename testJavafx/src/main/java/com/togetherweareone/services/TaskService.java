@@ -41,7 +41,7 @@ public class TaskService {
 
     public Mono<Checklist[]> getAllChecklists(WebClient webClient, GetAllChecklistsRequest request) {
         return webClient.get()
-                .uri("/task/allChecklist/" + request.getTaskId())
+                .uri("/task/allChecklists/" + request.getTaskId())
                 .retrieve()
                 .bodyToMono(Checklist[].class);
     }

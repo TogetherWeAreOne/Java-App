@@ -8,18 +8,20 @@ public class Task {
     public String title;
     public String description;
     public String priority;
+    public String state;
     public ArrayList<Checklist> checklists;
 
     public Task() {
-        this.checklists = new ArrayList<Checklist>();
+        this.checklists = new ArrayList<>();
     }
 
-    public Task(String id, String title, String description, String priority, ArrayList<Checklist> checklists) {
+    public Task(String id, String title, String description, String priority, ArrayList<Checklist> checklists, String state) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.checklists = checklists;
+        this.state = state;
     }
 
     public String getId() {
@@ -62,14 +64,11 @@ public class Task {
         this.checklists = checklists;
     }
 
-    @Override
-    public String toString() {
-        return "Task{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", priority='" + priority + '\'' +
-                ", Checklists=" + checklists +
-                '}';
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

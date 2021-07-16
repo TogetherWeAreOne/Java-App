@@ -23,6 +23,9 @@ public class OptionService {
     public Mono<Void> updateOption(WebClient webClient, UpdateOptionRequest request) {
         return webClient.put()
                 .uri("/option/update/" + request.getOptionId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(request), UpdateOptionRequest.class)
                 .retrieve()
                 .bodyToMono(Void.class);
     }
