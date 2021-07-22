@@ -1,15 +1,4 @@
 module com.togetherweareone {
-    /*requires javafx.controls;
-    requires javafx.fxml;
-    requires spring.webflux;
-    requires spring.core;
-    requires spring.web;
-    requires org.eclipse.jetty.client;
-    requires org.eclipse.jetty.http;
-    requires reactor.core;
-    requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.core;
-    requires org.reactivestreams;*/
     requires javafx.controls;
     requires javafx.fxml;
     requires commons.cli;
