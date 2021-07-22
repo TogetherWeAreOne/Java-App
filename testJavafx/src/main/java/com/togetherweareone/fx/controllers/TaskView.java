@@ -244,7 +244,7 @@ public class TaskView {
 
         allOptions
                 .doOnSuccess(options -> {
-                    if (options.length > 0){
+                    if (options.length > 0) {
                         for (Option o : options)
                             if (o.getState().equals("FINISHED")) checklistPercentage += 100 / options.length;
 

@@ -40,5 +40,4 @@ module com.togetherweareone {
     exports com.togetherweareone.models;
     exports com.togetherweareone.fx to javafx.fxml, javafx.graphics;
     exports com.togetherweareone.api;
-
 }

@@ -2,11 +2,8 @@ package com.togetherweareone.fx.controllers;
 
 import com.togetherweareone.Main;
 import com.togetherweareone.fx.Fx;
-import com.togetherweareone.request.checklistRequest.DeleteChecklistRequest;
-import com.togetherweareone.request.checklistRequest.UpdateChecklistRequest;
 import com.togetherweareone.request.optionRequest.DeleteOptionRequest;
 import com.togetherweareone.request.optionRequest.UpdateOptionRequest;
-import com.togetherweareone.services.ChecklistService;
 import com.togetherweareone.services.OptionService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
