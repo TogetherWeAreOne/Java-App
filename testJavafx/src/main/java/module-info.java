@@ -13,6 +13,7 @@ module com.togetherweareone {
     requires org.eclipse.jetty.client;
     requires org.reactivestreams;
     requires com.fasterxml.jackson.core;
+    requires org.pf4j;
 
     opens com.togetherweareone.request.authRequest;
     opens com.togetherweareone.request.projectRequest;
