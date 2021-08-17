@@ -22,7 +22,7 @@ public class Main extends Application {
         PluginManager pluginManager = new DefaultPluginManager();
         pluginManager.loadPlugins();
         pluginManager.startPlugins();
-        System.out.println(System.getProperty("pf4j.pluginsDir", "plugins"));
+        //System.out.println(System.getProperty("pf4j.pluginsDir", "plugins"));
 
         if (args.length > 0 && args[0].equals("-cli")) {
             new Cli();

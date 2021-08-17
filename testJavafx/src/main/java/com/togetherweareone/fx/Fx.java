@@ -7,11 +7,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.pf4j.ExtensionPoint;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class Fx {
+public class Fx implements ExtensionPoint {
 
     public static User user;
     public static ApiClient apiClient;

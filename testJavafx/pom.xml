@@ -90,7 +90,15 @@
         <dependency>
             <groupId>org.pf4j</groupId>
             <artifactId>pf4j</artifactId>
+            <scope>system</scope>
             <version>3.6.0</version>
+            <systemPath>${basedir}\src\lib\pf4j.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.zafarkhaja</groupId>
+            <artifactId>java-semver</artifactId>
+            <version>0.9.0</version>
         </dependency>
 
     </dependencies>
